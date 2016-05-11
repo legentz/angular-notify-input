@@ -1,4 +1,3 @@
-## Angular-notify-input
+## Angular-notify-input (directive)
 
-Do not use watchers. In this case $broadcast was used to reach the goal to update a field on-blur and execute a callback.
-Custom directive: <b>react-to</b>
+Do not use $watch! In this case was used $broadcast to reach the goal to update one or more field onChange and execute a callback (if needed). Check the example.
