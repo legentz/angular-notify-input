@@ -16,14 +16,11 @@ app.controller('TestController', function ($scope) {
     },
     d: {
       name: 'varD',
-      value: 34
-    },
-    e: {
-      name: 'varE',
-      value: 9
+      value: 0
     }
   }
 
+  // Used by Res
   $scope.reactOptions = {
     whatToDo: function () {
       $scope.val.c.value = $scope.val.a.value + $scope.val.b.value
@@ -32,34 +29,62 @@ app.controller('TestController', function ($scope) {
       $scope.val.a.name,
       $scope.val.b.name
     ],
+    doNotReact: false
+  }
+
+  $scope.reactOptions2 = {
+    whatToDo: function () {},
+    toWhom: [],
     doNotReact: true
   }
 
-  $scope.notifyChange = function (name) {
-    $scope.$broadcast(name, $scope.reactOptions)
+  // Used by Res2
+  $scope.reactOptions3 = {
+    whatToDo: function () {
+      $scope.val.d.value = $scope.val.c.value + $scope.val.a.value
+    },
+    toWhom: [
+      $scope.val.a.name,
+      $scope.val.c.name
+    ],
+    doNotReact: false
   }
 })
 
-app.directive('notifier', function () {
+app.directive('notifier', function ($timeout) {
   function link ($scope, element, $attrs) {
-    var toWhom = $scope.reactTo.toWhom
-    var whatToDo = $scope.reactTo.whatToDo
+    var reactTo = $scope.reactTo
+    var toWhom = reactTo ? reactTo.toWhom : []
+    var whatToDo = reactTo ? reactTo.whatToDo : []
+    var elementName = $scope.elementName
 
-    angular.forEach(toWhom, function (v, k) {
-      $scope.$on(v, function (event, data) {
-        if (!data.doNotReact) {
-          return
-        }
-
-        data.whatToDo()
-      })
+    element.bind('change', function () {
+      $scope.$parent.$broadcast(elementName)
     })
+
+    if (toWhom && toWhom.length > 0) {
+      angular.forEach(toWhom, function (v, k) {
+        $scope.$on(v, function (event, data) {
+          if (reactTo.doNotReact) {
+            return
+          }
+
+          // To avoid $apply, use $timeout
+          $timeout(function () {
+            reactTo.whatToDo()
+            $scope.$parent.$broadcast(elementName)
+          })
+        })
+      })
+    }
   }
 
   return {
     restrict: 'A',
     scope: {
-      reactTo: '='
+      reactTo: '=',
+      elementName: '=',
+      reactOptions: '='
     },
     link: link
   }

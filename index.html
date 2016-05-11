@@ -5,12 +5,16 @@
   </head>
   <body>
     <div ng-controller="TestController">
-      <input ng-blur="notifyChange(val.a.name)" type="number" ng-model="val.a.value" />
-      <input ng-blur="notifyChange(val.a.name)" type="number" ng-model="val.b.value" />
+      <input notifier element-name="val.a.name" react-to="reactOptions2" type="number" ng-model="val.a.value" />
+      <input notifier element-name="val.b.name" react-to="reactOptions2" type="number" ng-model="val.b.value" />
 
       <br>
       
-      Res:<input notifier react-to="reactOptions" ng-model="val.c.value" ng-init="reactOptions.whatToDo()" disabled />
+      Res(a+b):<input notifier element-name="val.c.name" react-to="reactOptions" type="number" ng-model="val.c.value" ng-init="reactOptions.whatToDo()" disabled />
+
+      <br>
+
+      Res2(res+a):<input notifier element-name="val.d.name" react-to="reactOptions3" type="number" ng-model="val.d.value" disabled />
     </div>
   </body>
 </html>
