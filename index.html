@@ -1,0 +1,16 @@
+<html ng-app="testApp">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.js"></script>
+    <script src="app.js"></script>
+  </head>
+  <body>
+    <div ng-controller="TestController">
+      <input ng-blur="notifyChange(val.a.name)" type="number" ng-model="val.a.value" />
+      <input ng-blur="notifyChange(val.a.name)" type="number" ng-model="val.b.value" />
+
+      <br>
+      
+      Res:<input notifier react-to="reactOptions" ng-model="val.c.value" ng-init="reactOptions.whatToDo()" disabled />
+    </div>
+  </body>
+</html>
