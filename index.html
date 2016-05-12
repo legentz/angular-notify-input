@@ -4,17 +4,20 @@
     <script src="app.js"></script>
   </head>
   <body>
-    <div ng-controller="TestController">
-      <input notifier element-name="val.a.name" react-to="reactOptions2" type="number" ng-model="val.a.value" />
-      <input notifier element-name="val.b.name" react-to="reactOptions2" type="number" ng-model="val.b.value" />
-
-      <br>
+    <div ng-controller="FormulaController">
+      <input ng-model="input.a1" cell cell-name="a1" />
+      <input ng-model="input.b1" cell cell-name="b1" />
+      <input ng-model="input.c1" cell cell-name="c1" cell-observes="['a1', 'b1']" cell-formula="input.a1 + input.b1" />
+      <br />
       
-      Res(a+b):<input notifier element-name="val.c.name" react-to="reactOptions" type="number" ng-model="val.c.value" ng-init="reactOptions.whatToDo()" disabled />
-
-      <br>
-
-      Res2(res+a):<input notifier element-name="val.d.name" react-to="reactOptions3" type="number" ng-model="val.d.value" disabled />
+      <input ng-model="input.a2" cell cell-name="a2" />
+      <input ng-model="input.b2" cell cell-name="b2" />
+      <input ng-model="input.c2" cell cell-name="c2" />
+      <br />
+      
+      <input ng-model="input.a3" cell cell-name="a3" />
+      <input ng-model="input.b3" cell cell-name="b3" />
+      <input ng-model="input.c3" cell cell-name="c3" cell-observes="['c1', 'c2']" cell-formula="input.c1 + input.c2" />
     </div>
   </body>
 </html>
