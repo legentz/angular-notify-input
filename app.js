@@ -1,6 +1,9 @@
 var app = angular.module('testApp', [])
 
-app.controller('FormulaController', function ($scope) {
+app.controller('FormulaController', function ($scope, Formulas) {
+  // init
+  Formulas.setScope($scope);
+
   $scope.input = {
     a1: '', b1: '', c1: '',
     a2: '', b2: '', c2: '',
@@ -8,7 +11,20 @@ app.controller('FormulaController', function ($scope) {
   }
 })
 
-app.directive('cell', function ($timeout, $parse) {
+app.factory('Formulas', function () {
+  var scope;
+
+  return {
+    c1: function () {
+      return (scope.input.a1 + scope.input.a1) + (scope.input.b1 + scope.input.b1);
+    },
+    setScope: function (s) {
+      scope = s;
+    }
+  }
+})
+
+app.directive('cell', function ($timeout, $parse, Formulas) {
   return {
     restrict: 'A',
     require: 'ngModel',
@@ -32,17 +48,17 @@ app.directive('cell', function ($timeout, $parse) {
         angular.forEach(observes, function (o) {
           $scope.$on(o + 'Changed', function (event, data) {
             $timeout(function () {
-              var result = formula()
+              var result = name in Formulas ? Formulas[name]() : formula();
 
               // Update view
-              ngModelCtrl.$viewValue = result
-              ngModelCtrl.$render()
+              ngModelCtrl.$viewValue = result;
+              ngModelCtrl.$render();
 
               // Update model
-              ngModelCtrl.$modelValue = result
-              $scope.ngModel = result
+              ngModelCtrl.$modelValue = result;
+              $scope.ngModel = result;
 
-              $scope.$parent.$broadcast(name + 'Changed')
+              $scope.$parent.$broadcast(name + 'Changed');
             })
           })
         })
